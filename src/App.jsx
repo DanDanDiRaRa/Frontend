@@ -1,11 +1,18 @@
 import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
+import MapPage from "./pages/MapPage";
+import MyPage from "./pages/MyPage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/map" element={<MapPage />} />
+        <Route path="/mypage" element={<MyPage />} />
+      </Route>
     </Routes>
   );
 }

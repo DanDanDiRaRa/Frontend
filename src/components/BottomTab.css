@@ -1,0 +1,19 @@
+.tab {
+  display: flex;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-paper);
+}
+
+.tab-item {
+  flex: 1;
+  padding: 16px 0;
+  text-align: center;
+  color: #7a857f;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.tab-item.active {
+  color: var(--color-forest);
+  background: var(--color-sage);
+}

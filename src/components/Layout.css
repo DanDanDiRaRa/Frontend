@@ -1,0 +1,20 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--color-base);
+}
+
+.app-header {
+  padding: 16px;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 800;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px 16px;
+}
