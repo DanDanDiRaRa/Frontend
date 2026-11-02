@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import MapPage from "./pages/MapPage";
 import MyPage from "./pages/MyPage";
 import SignupPage from "./pages/SignupPage";
+import VisitedPlacesPage from "./pages/VisitedPlacesPage";
+import RewardsPage from "./pages/RewardsPage";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/places" element={<VisitedPlacesPage />} />
+        <Route path="/mypage/rewards" element={<RewardsPage />} />
       </Route>
     </Routes>
   );

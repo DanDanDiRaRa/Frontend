@@ -1,0 +1,32 @@
+.page-title {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.page-desc {
+  margin: 0 0 24px;
+  color: #6b766f;
+}
+
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #6b766f;
+}
+
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal {
+  width: 300px;
+  padding: 24px 16px;
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
