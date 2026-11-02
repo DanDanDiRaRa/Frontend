@@ -1,16 +1,20 @@
-# React + Vite
+# 기억의 좌표 Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+대구·경북 지역 기억 아카이브 서비스의 프론트엔드 레포입니다. (모바일 웹)
 
-Currently, two official plugins are available:
+## 실행 방법
+1. 레포 받기: `git clone https://github.com/DanDanDiRaRa/Frontend.git`
+2. 폴더 이동: `cd Frontend`
+3. 라이브러리 설치: `npm install`
+4. 개발 서버 실행: `npm run dev`
+5. 브라우저에서 `http://localhost:5173/` 접속
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 폴더 구조
+- `src/pages` : 화면 (S01~S20)
+- `src/components` : 공통 컴포넌트 (Button, Input, Card, Layout, BottomTab)
+- `src/styles` : 공통 스타일
+- `src/api` : 백엔드 통신 코드 (예정)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 협업 규칙
+- 작업 전에 `git pull` 먼저
+- 새 기능은 브랜치를 만들어서 작업 (예: `feature/map`)
