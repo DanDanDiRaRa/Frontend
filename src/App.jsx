@@ -6,6 +6,10 @@ import MyPage from "./pages/MyPage";
 import SignupPage from "./pages/SignupPage";
 import VisitedPlacesPage from "./pages/VisitedPlacesPage";
 import RewardsPage from "./pages/RewardsPage";
+import PlaceDetailPage from "./pages/PlaceDetailPage";
+import VerifyPage from "./pages/VerifyPage";
+import VerifyResultPage from "./pages/VerifyResultPage";
+import PastPhotoPage from "./pages/PastPhotoPage";
 
 function App() {
   return (
@@ -18,6 +22,10 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/places" element={<VisitedPlacesPage />} />
         <Route path="/mypage/rewards" element={<RewardsPage />} />
+        <Route path="/place/:id" element={<PlaceDetailPage />} />
+        <Route path="/place/:id/verify" element={<VerifyPage />} />
+        <Route path="/place/:id/result" element={<VerifyResultPage />} />
+        <Route path="/place/:id/photos" element={<PastPhotoPage />} />
       </Route>
     </Routes>
   );
