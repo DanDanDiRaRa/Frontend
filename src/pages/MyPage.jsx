@@ -17,7 +17,8 @@ function MyPage() {
         onClick={() => navigate("/mypage/places")} />
       <Card index="02" title="내 보상" desc="획득한 보상 내역 확인"
         onClick={() => navigate("/mypage/rewards")} />
-      <Card index="03" title="회원정보" desc="정보 조회 및 수정" />
+      <Card index="03" title="회원정보" desc="정보 조회 및 수정"
+        onClick={() => navigate("/mypage/profile")} />
 
       <div style={{ height: 16 }} />
       <Button variant="secondary" onClick={() => setShowLogout(true)}>

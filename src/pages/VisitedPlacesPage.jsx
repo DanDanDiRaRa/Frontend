@@ -20,7 +20,13 @@ function VisitedPlacesPage() {
         <div className="empty">아직 방문한 장소가 없어요.</div>
       ) : (
         places.map((p, i) => (
-          <Card key={p.id} index={i + 1} title={p.name} desc={p.desc} />
+          <Card
+            key={p.id}
+            index={i + 1}
+            title={p.name}
+            desc={p.desc}
+            onClick={() => navigate(`/mypage/places/${p.id}`)}
+            />
         ))
       )}
 

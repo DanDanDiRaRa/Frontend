@@ -15,6 +15,9 @@ import MissionSubmitPage from "./pages/MissionSubmitPage";
 import MissionResultPage from "./pages/MissionResultPage";
 import RewardResultPage from "./pages/RewardResultPage";
 import RewardDetailPage from "./pages/RewardDetailPage";
+import VisitedPlaceDetailPage from "./pages/VisitedPlaceDetailPage";
+import ProfilePage from "./pages/ProfilePage";
+import ProfileEditPage from "./pages/ProfileEditPage";
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
         <Route path="/place/:id/mission/result" element={<MissionResultPage />} />
         <Route path="/place/:id/reward" element={<RewardResultPage />} />
         <Route path="/mypage/rewards/:rewardId" element={<RewardDetailPage />} />
+        <Route path="/mypage/places/:id" element={<VisitedPlaceDetailPage />} />
+        <Route path="/mypage/profile" element={<ProfilePage />} />
+        <Route path="/mypage/profile/edit" element={<ProfileEditPage />} />
       </Route>
     </Routes>
   );
