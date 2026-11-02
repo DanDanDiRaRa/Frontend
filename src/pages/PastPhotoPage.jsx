@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
 import "./MyPage.css";
 import "./PlacePages.css";
 
 function PastPhotoPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   return (
@@ -23,7 +24,7 @@ function PastPhotoPage() {
         </div>
       </div>
 
-      <Button onClick={() => alert(`미션 화면은 다음 단계에서 만들어요 (장소 ${id})`)}>
+      <Button onClick={() => navigate(`/place/${id}/mission`)}>
         미션 확인하기
       </Button>
     </div>

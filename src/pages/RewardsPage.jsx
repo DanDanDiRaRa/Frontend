@@ -20,7 +20,12 @@ function RewardsPage() {
         <div className="empty">아직 획득한 보상이 없어요.</div>
       ) : (
         rewards.map((r) => (
-          <Card key={r.id} title={r.name} desc={r.desc} />
+          <Card
+            key={r.id}
+            title={r.name}
+            desc={r.desc}
+            onClick={() => navigate(`/mypage/rewards/${r.id}`)}
+            />
         ))
       )}
 

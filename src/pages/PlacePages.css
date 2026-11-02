@@ -52,3 +52,47 @@
 .gap {
   height: 8px;
 }
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.step:first-of-type {
+  border-top: none;
+}
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-sage);
+  font-weight: 800;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 16px;
+  margin-bottom: 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  color: #6b766f;
+  text-align: center;
+}
+
+.upload-plus {
+  font-size: 32px;
+  line-height: 1;
+}
