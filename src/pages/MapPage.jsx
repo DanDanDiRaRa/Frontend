@@ -70,7 +70,10 @@ function MapPage() {
     <div>
       <h1 className="page-title">지도 / 추천 장소</h1>
 
-      <KakaoMap places={places} />
+      <KakaoMap
+        places={places}
+        selectedPlaceId={selectedPlaceId}
+      />
 
       
       {selectedPlace && (

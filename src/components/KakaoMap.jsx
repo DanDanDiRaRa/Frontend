@@ -53,9 +53,10 @@ function loadKakaoMapSdk() {
 }
 
 
-function KakaoMap({ places }) {
+function KakaoMap({ places, selectedPlaceId }) {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const markersRef = useRef(new Map());
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -107,6 +108,7 @@ function KakaoMap({ places }) {
 
     const markers = [];
     const bounds = new kakao.maps.LatLngBounds();
+    const markersById = new Map();
 
     for (const place of Array.isArray(places) ? places : []) {
       if (
@@ -139,6 +141,12 @@ function KakaoMap({ places }) {
 
       markers.push(marker);
       bounds.extend(position);
+
+      const placeId = place.id ?? place.place_id;
+
+      if (placeId != null) {
+        markersById.set(String(placeId), marker);
+      }
     }
 
     // 장소가 모두 보이도록 지도 범위 조정
@@ -148,13 +156,70 @@ function KakaoMap({ places }) {
       map.setCenter(markers[0].getPosition());
     }
 
+    markersRef.current = markersById;
+
     // 장소 데이터가 바뀌면 기존 마커 제거
     return () => {
+      markersRef.current = new Map();
+
       markers.forEach((marker) => {
         marker.setMap(null);
       });
     };
+
+    
   }, [places, mapReady]);
+
+  
+  // 3. 선택한 장소로 지도 이동 및 마커 강조
+  useEffect(() => {
+    if (!mapReady || selectedPlaceId == null) return;
+
+    const map = mapInstanceRef.current;
+    const kakao = window.kakao;
+
+    const marker = markersRef.current.get(
+      String(selectedPlaceId)
+    );
+
+    const selectedPlace = places.find(
+      (place) =>
+        String(place.id ?? place.place_id) ===
+        String(selectedPlaceId)
+    );
+
+    if (!map || !marker || !selectedPlace) return;
+
+    // 선택한 장소의 중심 좌표와 확대 수준을 함께 변경
+    map.jump(marker.getPosition(), 5);
+
+    // 선택된 마커를 다른 마커보다 위에 표시
+    marker.setZIndex(10);
+
+    // 장소명을 안전하게 텍스트로 표시
+    const label = document.createElement("div");
+    label.textContent =
+      selectedPlace.name ??
+      selectedPlace.place_name ??
+      "추천 장소";
+
+    label.style.cssText =
+      "padding:8px 12px;font-size:13px;" +
+      "font-weight:600;white-space:nowrap;";
+
+    const infoWindow = new kakao.maps.InfoWindow({
+      content: label,
+      removable: false,
+    });
+
+    infoWindow.open(map, marker);
+
+    // 다른 장소 선택 시 이전 강조 표시 제거
+    return () => {
+      infoWindow.close();
+      marker.setZIndex(0);
+    };
+  }, [selectedPlaceId, places, mapReady]);
 
   return (
     <div>
