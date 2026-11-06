@@ -85,9 +85,15 @@ function VerifyPage() {
         longitude
       );
 
+      if (data.status === "SUCCESS") {
+        navigate(`/place/${id}/result`, {
+          state: { verificationResult: data },
+        });
+        return;
+      }
+
       setResult(data);
 
-      // 서버가 GPS 실패 또는 오류로 판정한 경우
       setCanUsePhoto(
         data.status === "FAILED" ||
         data.status === "ERROR"
@@ -163,11 +169,14 @@ function VerifyPage() {
       );
 
       // 4. 인증 결과 저장
-      setResult(data);
-
       if (data.status === "SUCCESS") {
-        setCanUsePhoto(false);
+        navigate(`/place/${id}/result`, {
+          state: { verificationResult: data },
+        });
+        return;
       }
+
+      setResult(data);
     } catch (err) {
       setError(
         err.message ||
