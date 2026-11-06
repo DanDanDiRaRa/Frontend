@@ -1,6 +1,6 @@
 
 import { apiRequest } from './client';
-import { saveToken } from './token';
+import { saveToken, removeToken } from './token';
 
 // 회원가입 API
 export function signUp({
@@ -51,4 +51,18 @@ export function checkAuthStatus() {
     method: "GET",
     auth: true,
   });
+}
+
+
+ // 로그아웃 API
+export async function logOut() {
+  try {
+    await apiRequest("/auth/logout", {
+      method: "POST",
+      auth: true,
+    });
+  } finally {
+    // 서버 요청 결과와 관계없이 로컬 JWT 삭제
+    removeToken();
+  }
 }
