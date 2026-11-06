@@ -10,3 +10,16 @@ export function getPlaceDetail(placeId) {
     }
   );
 }
+
+
+ // 장소별 과거 사진 조회
+export function getHistoricalPhotos(placeId) {
+  return apiRequest(
+    `/places/${encodeURIComponent(placeId)}/historical-photos`,
+    {
+      method: "GET",
+      auth: true,
+    }
+  );
+}
+
