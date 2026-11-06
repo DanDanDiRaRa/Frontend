@@ -14,6 +14,7 @@ function MapPage() {
   const navigate = useNavigate();
 
   const [places, setPlaces] = useState([]);
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
@@ -53,6 +54,12 @@ function MapPage() {
     };
   }, [retryCount]);
 
+  const selectedPlace = places.find(
+    (place) =>
+      String(place.id ?? place.place_id) ===
+      String(selectedPlaceId)
+  );
+
   const handleRetry = () => {
     setError("");
     setIsLoading(true);
@@ -64,6 +71,30 @@ function MapPage() {
       <h1 className="page-title">지도 / 추천 장소</h1>
 
       <KakaoMap places={places} />
+
+      
+      {selectedPlace && (
+        <div className="info-box" aria-live="polite">
+          <strong>
+            {selectedPlace.name ?? selectedPlace.place_name}
+          </strong>
+
+          <p>
+            {selectedPlace.address ?? "주소 정보가 없습니다."}
+          </p>
+
+          <Button
+            onClick={() =>
+              navigate(
+                `/place/${selectedPlace.id ?? selectedPlace.place_id}`
+              )
+            }
+          >
+            장소 상세 보기
+          </Button>
+        </div>
+      )}
+
 
       <h2 className="page-title">추천 장소</h2>
 
@@ -107,7 +138,7 @@ function MapPage() {
               key={placeId}
               title={placeName}
               desc={description}
-              onClick={() => navigate(`/place/${placeId}`)}
+              onClick={() => setSelectedPlaceId(placeId)}
             />
           );
         })}
