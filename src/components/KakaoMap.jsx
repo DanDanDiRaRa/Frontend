@@ -53,7 +53,7 @@ function loadKakaoMapSdk() {
 }
 
 
-function KakaoMap({ places, selectedPlaceId }) {
+function KakaoMap({ places, selectedPlaceId, onSelectPlace }) {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef(new Map());
@@ -144,9 +144,16 @@ function KakaoMap({ places, selectedPlaceId }) {
 
       const placeId = place.id ?? place.place_id;
 
+      
       if (placeId != null) {
         markersById.set(String(placeId), marker);
+
+        // 마커를 클릭하면 해당 장소 선택
+        kakao.maps.event.addListener(marker, "click", () => {
+          onSelectPlace?.(placeId);
+        });
       }
+
     }
 
     // 장소가 모두 보이도록 지도 범위 조정
@@ -168,7 +175,7 @@ function KakaoMap({ places, selectedPlaceId }) {
     };
 
     
-  }, [places, mapReady]);
+  }, [places, mapReady, onSelectPlace]);
 
   
   // 3. 선택한 장소로 지도 이동 및 마커 강조

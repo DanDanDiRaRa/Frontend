@@ -73,6 +73,7 @@ function MapPage() {
       <KakaoMap
         places={places}
         selectedPlaceId={selectedPlaceId}
+        onSelectPlace={setSelectedPlaceId}
       />
 
       
