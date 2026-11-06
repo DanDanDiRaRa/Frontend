@@ -43,3 +43,12 @@ export async function logIn({ accountId, password }) {
 
   return data;
 }
+
+
+ // 로그인 상태 확인 API
+export function checkAuthStatus() {
+  return apiRequest("/auth/status", {
+    method: "GET",
+    auth: true,
+  });
+}
