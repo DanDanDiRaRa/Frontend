@@ -1,5 +1,8 @@
+
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import LoginPage from "./pages/LoginPage";
 import MapPage from "./pages/MapPage";
 import MyPage from "./pages/MyPage";
@@ -23,25 +26,32 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
+        {/* 로그인 없이 접근할 수 있는 페이지 */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/map" element={<MapPage />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypage/places" element={<VisitedPlacesPage />} />
-        <Route path="/mypage/rewards" element={<RewardsPage />} />
-        <Route path="/place/:id" element={<PlaceDetailPage />} />
-        <Route path="/place/:id/verify" element={<VerifyPage />} />
-        <Route path="/place/:id/result" element={<VerifyResultPage />} />
-        <Route path="/place/:id/photos" element={<PastPhotoPage />} />
-        <Route path="/place/:id/mission" element={<MissionPage />} />
-        <Route path="/place/:id/mission/submit" element={<MissionSubmitPage />} />
-        <Route path="/place/:id/mission/result" element={<MissionResultPage />} />
-        <Route path="/place/:id/reward" element={<RewardResultPage />} />
-        <Route path="/mypage/rewards/:rewardId" element={<RewardDetailPage />} />
-        <Route path="/mypage/places/:id" element={<VisitedPlaceDetailPage />} />
-        <Route path="/mypage/profile" element={<ProfilePage />} />
-        <Route path="/mypage/profile/edit" element={<ProfileEditPage />} />
+
+        {/* 로그인이 필요한 페이지 */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/places" element={<VisitedPlacesPage />} />
+          <Route path="/mypage/rewards" element={<RewardsPage />} />
+
+          <Route path="/place/:id" element={<PlaceDetailPage />} />
+          <Route path="/place/:id/verify" element={<VerifyPage />} />
+          <Route path="/place/:id/result" element={<VerifyResultPage />} />
+          <Route path="/place/:id/photos" element={<PastPhotoPage />} />
+          <Route path="/place/:id/mission" element={<MissionPage />} />
+          <Route path="/place/:id/mission/submit" element={<MissionSubmitPage />} />
+          <Route path="/place/:id/mission/result" element={<MissionResultPage />} />
+          <Route path="/place/:id/reward" element={<RewardResultPage />} />
+
+          <Route path="/mypage/rewards/:rewardId" element={<RewardDetailPage />} />
+          <Route path="/mypage/places/:id" element={<VisitedPlaceDetailPage />} />
+          <Route path="/mypage/profile" element={<ProfilePage />} />
+          <Route path="/mypage/profile/edit" element={<ProfileEditPage />} />
+        </Route>
       </Route>
     </Routes>
   );
