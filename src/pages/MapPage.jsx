@@ -77,6 +77,17 @@ function MapPage() {
       />
 
       
+      {selectedPlaceId != null && (
+        <Button
+          variant="secondary"
+          onClick={() => setSelectedPlaceId(null)}
+        >
+          전체 장소 보기
+        </Button>
+      )}
+
+
+      
       {selectedPlace && (
         <div className="info-box" aria-live="polite">
           <strong>

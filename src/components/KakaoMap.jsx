@@ -179,15 +179,43 @@ function KakaoMap({ places, selectedPlaceId, onSelectPlace }) {
 
   
   // 3. 선택한 장소로 지도 이동 및 마커 강조
+  
   useEffect(() => {
-    if (!mapReady || selectedPlaceId == null) return;
+    if (!mapReady) return;
 
     const map = mapInstanceRef.current;
+    if (!map) return;
+
+    // 선택된 장소가 없으면 전체 장소 표시
+    if (selectedPlaceId == null) {
+      const markers = [
+        ...markersRef.current.values()
+      ];
+
+      if (markers.length === 0) return;
+
+      const bounds = new window.kakao.maps.LatLngBounds();
+
+      markers.forEach((marker) => {
+        bounds.extend(marker.getPosition());
+      });
+
+      if (markers.length === 1) {
+        map.setCenter(markers[0].getPosition());
+        map.setLevel(5);
+      } else {
+        map.setBounds(bounds, 24, 24, 24, 24);
+      }
+
+      return;
+    }
+
     const kakao = window.kakao;
 
     const marker = markersRef.current.get(
       String(selectedPlaceId)
     );
+
 
     const selectedPlace = places.find(
       (place) =>
