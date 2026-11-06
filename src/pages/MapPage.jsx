@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRecommendedPlaces } from "../api/places";
+import KakaoMap from "../components/KakaoMap";
 
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -62,9 +63,7 @@ function MapPage() {
     <div>
       <h1 className="page-title">지도 / 추천 장소</h1>
 
-      <div className="photo-box">
-        기록 지도 · 지도 기능 연동 예정
-      </div>
+      <KakaoMap />
 
       <h2 className="page-title">추천 장소</h2>
 
