@@ -63,7 +63,7 @@ function MapPage() {
     <div>
       <h1 className="page-title">지도 / 추천 장소</h1>
 
-      <KakaoMap />
+      <KakaoMap places={places} />
 
       <h2 className="page-title">추천 장소</h2>
 
