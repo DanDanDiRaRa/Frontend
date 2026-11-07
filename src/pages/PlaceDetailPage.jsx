@@ -119,13 +119,47 @@ function PlaceDetailPage() {
     place.short_description ??
     "";
 
+  const imageUrl = place.image_url ?? null;
+  const imageSource = place.image_source ?? null;
+
   return (
     <div>
       <span className="badge">추천 장소</span>
 
-      <div className="photo-box">
-        장소 이미지 준비 중
-      </div>
+      
+    <div className="photo-box">
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={`${name} 대표 이미지`}
+          loading="lazy"
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "inherit",
+          }}
+        />
+      ) : (
+        "장소 이미지 준비 중"
+      )}
+    </div>
+
+    {imageUrl && imageSource && (
+      <p
+        style={{
+          fontSize: 12,
+          opacity: 0.7,
+          marginTop: 8,
+          marginBottom: 16,
+          overflowWrap: "anywhere",
+        }}
+      >
+        이미지 출처: {imageSource}
+      </p>
+    )}
+
 
       <h1 className="page-title">{name}</h1>
 
