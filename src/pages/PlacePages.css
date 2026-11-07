@@ -8,6 +8,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   color: #6b766f;
+  overflow: hidden;
 }
 
 .info-box {
