@@ -34,3 +34,18 @@ export function getMissionSubmissionResult(submissionId) {
     }
   );
 }
+
+export function getMyMissionSubmissions(placeId = null) {
+  const query =
+    placeId === null
+      ? ""
+      : `?place_id=${encodeURIComponent(placeId)}`;
+
+  return apiRequest(
+    `/missions/my-submissions${query}`,
+    {
+      method: "GET",
+      auth: true,
+    }
+  );
+}

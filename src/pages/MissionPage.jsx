@@ -1,9 +1,13 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getOrGenerateMission } from "../api/mission";
-import Button from "../components/Button";
 
+import {
+  getOrGenerateMission,
+  getMyMissionSubmissions,
+} from "../api/mission";
+
+import Button from "../components/Button";
 import "./MyPage.css";
 import "./PlacePages.css";
 
@@ -16,51 +20,71 @@ function MissionPage() {
   const [result, setResult] = useState({
     key: null,
     mission: null,
+    submissions: [],
     error: "",
-    status: null,
   });
 
   const requestKey = `${id}-${retryCount}`;
   const isLoading = result.key !== requestKey;
 
-  // 장소에 맞는 미션 생성 또는 조회
+  // 미션 정보와 내 제출 기록을 함께 조회
   useEffect(() => {
     let active = true;
 
-    getOrGenerateMission(id)
-      .then((data) => {
+    async function loadMission() {
+      try {
+        const [mission, history] = await Promise.all([
+          getOrGenerateMission(id),
+          getMyMissionSubmissions(id),
+        ]);
+
         if (!active) return;
 
         if (
-          !data ||
-          !Number.isInteger(data.mission_id) ||
-          Number(data.place_id) !== Number(id) ||
-          !Array.isArray(data.step_guides)
+          !mission ||
+          !Number.isSafeInteger(mission.mission_id) ||
+          Number(mission.place_id) !== Number(id) ||
+          !Array.isArray(mission.step_guides)
         ) {
           throw new Error(
             "미션 응답 형식이 올바르지 않습니다."
           );
         }
 
+        if (!history || !Array.isArray(history.submissions)) {
+          throw new Error(
+            "미션 제출 기록 형식이 올바르지 않습니다."
+          );
+        }
+
+        // 현재 장소와 미션에 해당하는 제출 기록만 사용
+        const submissions = history.submissions.filter(
+          (item) =>
+            Number(item.place_id) === Number(id) &&
+            Number(item.mission_id) === mission.mission_id
+        );
+
         setResult({
           key: requestKey,
-          mission: data,
+          mission,
+          submissions,
           error: "",
-          status: null,
         });
-      })
-      .catch((error) => {
+      } catch (error) {
         if (!active) return;
 
         setResult({
           key: requestKey,
           mission: null,
+          submissions: [],
           error:
             error.message ||
-            "미션을 불러오지 못했습니다.",
-          status: error.status ?? null,
+            "미션 정보를 불러오지 못했습니다.",
         });
-      });
+      }
+    }
+
+    loadMission();
 
     return () => {
       active = false;
@@ -70,11 +94,9 @@ function MissionPage() {
   if (isLoading) {
     return (
       <div>
-        <h1 className="page-title">
-          장소 미션
-        </h1>
+        <h1 className="page-title">장소 미션</h1>
         <p role="status">
-          미션을 준비하고 있습니다...
+          미션과 인증 기록을 확인하고 있습니다...
         </p>
       </div>
     );
@@ -83,19 +105,11 @@ function MissionPage() {
   if (result.error) {
     return (
       <div>
-        <h1 className="page-title">
-          장소 미션
-        </h1>
+        <h1 className="page-title">장소 미션</h1>
 
         <div className="info-box" role="alert">
-          <strong>미션을 불러오지 못했습니다.</strong>
+          <strong>미션 정보를 불러오지 못했습니다.</strong>
           <p>{result.error}</p>
-
-          {result.status === 403 && (
-            <p>
-              장소 방문 인증이 필요한지 확인해 주세요.
-            </p>
-          )}
         </div>
 
         <Button
@@ -110,9 +124,7 @@ function MissionPage() {
 
         <Button
           variant="secondary"
-          onClick={() =>
-            navigate(`/place/${id}/photos`)
-          }
+          onClick={() => navigate(`/place/${id}/photos`)}
         >
           과거 사진으로 돌아가기
         </Button>
@@ -121,34 +133,68 @@ function MissionPage() {
   }
 
   const mission = result.mission;
+  const submissions = result.submissions;
 
-  
-  // 이전에 저장된 미션 제출 번호 확인
-  const storedSubmissionId = sessionStorage.getItem(
-    `memory_coordinates_mission_submission_${id}`
+  // 성공 기록이 있으면 가장 최근 성공 기록을 우선 사용
+  const successfulSubmission = submissions.find(
+    (item) => item.status === "SUCCESS"
   );
 
-  const savedSubmissionId = Number(storedSubmissionId);
+  const submission =
+    successfulSubmission ?? submissions[0] ?? null;
 
-  const hasSavedSubmission =
-    storedSubmissionId !== null &&
-    Number.isSafeInteger(savedSubmissionId) &&
-    savedSubmissionId > 0;
+  const rewardId = Number(submission?.reward_id);
 
-  // 저장된 제출 번호가 있으면 결과 화면으로 이동
+  const hasReward =
+    submission?.reward_id != null &&
+    Number.isSafeInteger(rewardId) &&
+    rewardId > 0;
+
+  // 제출 기록에 따라 버튼 문구 결정
+  const getActionLabel = () => {
+    if (hasReward) {
+      return "획득한 보상 보기";
+    }
+
+    if (submission?.status === "SUCCESS") {
+      return "인증 결과 및 보상 확인";
+    }
+
+    if (submission?.status === "PENDING") {
+      return "심사 결과 확인";
+    }
+
+    if (
+      submission?.status === "FAILED" ||
+      submission?.status === "ERROR"
+    ) {
+      return "인증 자료 다시 제출";
+    }
+
+    return "수행 완료 · 인증으로";
+  };
+
   const handleContinueMission = () => {
-    if (hasSavedSubmission) {
+    // 이미 보상을 받았다면 실제 보상 상세로 이동
+    if (hasReward) {
+      navigate(`/mypage/rewards/${rewardId}`);
+      return;
+    }
+
+    // 성공 또는 심사 대기 기록이 있다면 결과 화면으로 이동
+    if (
+      submission?.status === "SUCCESS" ||
+      submission?.status === "PENDING"
+    ) {
       navigate(
-        `/place/${id}/mission/result?submissionId=${savedSubmissionId}`
+        `/place/${id}/mission/result?submissionId=${encodeURIComponent(
+          submission.submission_id
+        )}`
       );
       return;
     }
 
-    handleStartSubmit();
-  };
-
-
-  const handleStartSubmit = () => {
+    // 기록이 없거나 실패한 경우 제출 화면으로 이동
     navigate(`/place/${id}/mission/submit`, {
       state: {
         missionId: mission.mission_id,
@@ -173,7 +219,7 @@ function MissionPage() {
         과거와 현재를 연결하는 탐색을 시작해 보세요.
       </p>
 
-      {/* 실제 미션 내용 */}
+      {/* 미션 내용 */}
       <div className="info-box">
         <strong>{mission.title}</strong>
 
@@ -182,7 +228,7 @@ function MissionPage() {
         </p>
       </div>
 
-      {/* 단계별 수행 가이드 */}
+      {/* 수행 방법 */}
       <div className="info-box">
         <strong>미션 수행 방법</strong>
 
@@ -202,7 +248,7 @@ function MissionPage() {
         ))}
       </div>
 
-      {/* 미션 성공 시 예상 보상 */}
+      {/* 예상 보상 */}
       <div className="info-box">
         <strong>미션 성공 시 보상</strong>
 
@@ -215,21 +261,42 @@ function MissionPage() {
         )}
       </div>
 
-      
-      <Button onClick={handleContinueMission}>
-        {hasSavedSubmission
-          ? "기존 미션 인증 결과 확인"
-          : "수행 완료 · 인증으로"}
-      </Button>
+      {/* 기존 인증 기록 */}
+      {submission && (
+        <div className="info-box">
+          <strong>내 미션 인증 기록</strong>
 
+          <p>
+            {submission.status === "SUCCESS"
+              ? "미션 인증에 성공했어요."
+              : submission.status === "FAILED"
+                ? "이전 인증이 거절되었어요."
+                : submission.status === "PENDING"
+                  ? "미션 심사 결과를 기다리고 있어요."
+                  : "이전 인증 결과를 확인해 주세요."}
+          </p>
+
+          {submission.ai_feedback && (
+            <p style={{ lineHeight: 1.7 }}>
+              {submission.ai_feedback}
+            </p>
+          )}
+
+          {hasReward && (
+            <p>이미 보상을 수령한 미션입니다.</p>
+          )}
+        </div>
+      )}
+
+      <Button onClick={handleContinueMission}>
+        {getActionLabel()}
+      </Button>
 
       <div className="gap" />
 
       <Button
         variant="secondary"
-        onClick={() =>
-          navigate(`/place/${id}/photos`)
-        }
+        onClick={() => navigate(`/place/${id}/photos`)}
       >
         과거 사진으로 돌아가기
       </Button>
