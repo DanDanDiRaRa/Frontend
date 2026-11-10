@@ -122,44 +122,52 @@ function PlaceDetailPage() {
   const imageUrl = place.image_url ?? null;
   const imageSource = place.image_source ?? null;
 
+  // 백엔드에서 전달하는 방문 완료 여부
+  const isVisited = place.is_visited === true;
+
+  // 모든 계정이 방문 인증 화면을 거치도록 처리
+  const handleVerify = () => {
+    navigate(`/place/${id}/verify`);
+  };
+
   return (
     <div>
-      <span className="badge">추천 장소</span>
+      <span className="badge">
+        {isVisited ? "방문 인증 완료" : "추천 장소"}
+      </span>
 
-      
-    <div className="photo-box">
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={`${name} 대표 이미지`}
-          loading="lazy"
+      <div className="photo-box">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={`${name} 대표 이미지`}
+            loading="lazy"
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "inherit",
+            }}
+          />
+        ) : (
+          "장소 이미지 준비 중"
+        )}
+      </div>
+
+      {imageUrl && imageSource && (
+        <p
           style={{
-            display: "block",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: "inherit",
+            fontSize: 12,
+            opacity: 0.7,
+            marginTop: 8,
+            marginBottom: 16,
+            overflowWrap: "anywhere",
           }}
-        />
-      ) : (
-        "장소 이미지 준비 중"
+        >
+          이미지 출처: {imageSource}
+        </p>
       )}
-    </div>
-
-    {imageUrl && imageSource && (
-      <p
-        style={{
-          fontSize: 12,
-          opacity: 0.7,
-          marginTop: 8,
-          marginBottom: 16,
-          overflowWrap: "anywhere",
-        }}
-      >
-        이미지 출처: {imageSource}
-      </p>
-    )}
-
 
       <h1 className="page-title">{name}</h1>
 
@@ -174,19 +182,24 @@ function PlaceDetailPage() {
         )}
 
       <div className="info-box">
-        <strong>이 장소에 방문하면</strong>
+        <strong>
+          {isVisited
+            ? "이미 방문 인증한 장소예요!"
+            : "이 장소에 방문하면"}
+        </strong>
+
         <p>
-          연결된 과거 사진과 장소 관련 미션을
-          확인할 수 있어요.
+          {isVisited
+            ? "방문 인증 과정을 다시 체험하고, 과거 사진과 미션을 확인할 수 있어요."
+            : "위치를 인증하면 연결된 과거 사진과 장소 관련 미션을 확인할 수 있어요."}
         </p>
       </div>
 
-      <Button
-        onClick={() =>
-          navigate(`/place/${id}/verify`)
-        }
-      >
-        장소 방문 인증하기
+      {/* 일반 계정과 심사용 계정 모두 인증 화면 이동 */}
+      <Button onClick={handleVerify}>
+        {isVisited
+          ? "방문 인증 과정 체험하기"
+          : "장소 방문 인증하기"}
       </Button>
 
       <div className="gap" />
