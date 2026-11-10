@@ -47,13 +47,14 @@ function SignupPage() {
       return;
     }
 
+    // 닉네임 필수 입력 검증
     if (!trimmedNickname) {
       setError("닉네임을 입력해 주세요.");
       return;
     }
 
-    if (trimmedNickname.length > 50) {
-      setError("닉네임은 50자 이하로 입력해 주세요.");
+    if (trimmedNickname.length < 2 || trimmedNickname.length > 50) {
+      setError("닉네임은 2~50자로 입력해 주세요.");
       return;
     }
 
@@ -114,10 +115,15 @@ function SignupPage() {
         />
 
         <Input
-          label="닉네임 (선택)"
-          placeholder="닉네임 입력"
+          label="닉네임 (필수)"
+          type="text"
+          placeholder="닉네임 입력 (2~50자)"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
+          autoComplete="nickname"
+          minLength={2}
+          maxLength={50}
+          required
         />
 
         {error && (
