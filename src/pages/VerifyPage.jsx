@@ -9,6 +9,7 @@ import {
 } from "../api/visit";
 
 import Button from "../components/Button";
+import LocationlessVerifyButton from "../components/LocationlessVerifyButton";
 
 import "./MyPage.css";
 import "./PlacePages.css";
@@ -217,6 +218,22 @@ function VerifyPage() {
           ? "GPS 인증 중..."
           : "현재 위치로 방문 인증하기"}
       </Button>
+
+      <div className="gap" />
+
+      <details>
+        <summary>
+          위치 정보를 제공할 수 없는 경우
+        </summary>
+
+        <p className="page-desc">
+          심사용 계정은 위치 권한 없이도 방문 인증을
+          진행할 수 있습니다. 일반 계정에는 실제 위치
+          인증이 필요합니다.
+        </p>
+
+        <LocationlessVerifyButton placeId={id} />
+      </details>
 
       {result && (
         <div className="info-box" role="status">
